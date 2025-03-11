@@ -3,11 +3,24 @@ import api from "../api.js";
 import "../Estilos/content.css";
 
 const Contenido = () => {
+   const [localizacion, setLocalizacion] = useState([]);
+   const [localizacionSeleccionada, setLocalizacionSeleccionada] = useState("");
    const [dispositivos, setDispositivos] = useState([]);
    const [dispositivoSeleccionado, setDispositivoSeleccionado] = useState("");
 
    useEffect(() => {
-    const fetchDispositivos = async () => {
+    const Localizaciones = async () => {
+        try{
+            const response = await api.get("localization")
+        }
+        catch (error){
+
+        }
+    }
+  })
+
+   useEffect(() => {
+    const Dispositivos = async () => {
       try {
         const response = await api.get("devices");
         setDispositivos(response.data);
@@ -15,7 +28,7 @@ const Contenido = () => {
         console.error("Error al obtener dispositivos:", error);
       }
     };
-    fetchDispositivos();
+    Dispositivos();
 }, []);
 
 const handleSeleccion = (event) => {
@@ -33,7 +46,7 @@ return (
                 <option key={index}>{dispositivo.systemName}</option>
             ))}
         </select>
-        {dispositivoSeleccionado && dispositivos (
+        {dispositivoSeleccionado && (
             <p>Dispostivo seleccionado: <strong>{dispositivoSeleccionado}</strong></p>
         )}
     </div>
