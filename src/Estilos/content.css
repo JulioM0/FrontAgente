@@ -4,19 +4,63 @@
     padding: 0;
 }
 
-.content{
-    color: black;
-    text-align: center;
+.Contenido{
     margin-top: 100px;
 }
 
-.data{
+.Titulo{
     color: black;
-    text-align: center;
-    margin-top: 20px;
+    text-align: left;
+    margin-left: 70px;
+    font-size: 40px;
 }
 
-.data .select{
+.selectores{
     color: black;
-    
+    text-align: left;
+    margin-top: 20px;
+    margin-left: 70px;
+}
+
+.select-locations{
+    color: black;
+    margin-right: 20px;
+}
+
+.Tabla{
+    margin-left: 70px;
+    margin-right: 70px;
+}
+
+.Tabla-Datos{
+    margin-top: 50px;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 18px;
+    text-align: center;
+    align-items: center;
+}
+
+.Tabla-Datos th,
+.Tabla-Datos td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+}
+
+.Tabla-Datos thead tr {
+    background-color: #f4f4f4;
+    text-align: left;
+}
+
+.Tabla-Datos tbody tr:nth-of-type(even) {
+    background-color: #f9f9f9;
+}
+
+.Tabla-Datos tbody tr:nth-of-type(odd) {
+    background-color: #ffffff;
+}
+
+.Tabla-Datos tbody tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
 }
