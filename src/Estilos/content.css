@@ -18,37 +18,82 @@
 .selectores{
     color: black;
     text-align: left;
-    margin-top: 20px;
+    margin-top: 50px;
     margin-left: 70px;
 }
 
 .select-locations{
     color: black;
     margin-right: 20px;
+    border-radius: 10px;
+    border-color: #000000;
+    border-width: 2px;
+    height: 30px;
+    width: auto;
+    text-transform:uppercase;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.select-devices{
+    color: black;
+    margin-right: 70px;
+    border-radius: 10px;
+    border-color: #000000;
+    border-width: 2px;
+    height: 30px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-agregar{
+    width: 140px;
+    height: 32px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 13px;
+    cursor: pointer;
+    background-color: white;
+    border-color: #000000;
 }
 
 .Tabla{
     margin-left: 70px;
     margin-right: 70px;
+    overflow-x: auto;
 }
 
 .Tabla-Datos{
     margin-top: 50px;
     width: 100%;
+    height: 100%;
     border-collapse: collapse;
-    font-size: 18px;
-    text-align: center;
+    font-size: 16px;
+    text-align: left;
     align-items: center;
+    margin-bottom: 15px;
+}
+
+.seccion-info{
+    margin-top: 20px;
+}
+
+.informacion{
+    background-color: rgb(133, 130, 130);
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    text-align: center;
 }
 
 .Tabla-Datos th,
 .Tabla-Datos td {
     padding: 12px 15px;
-    border: 1px solid #ddd;
+    border: 1px solid #000000;
 }
 
 .Tabla-Datos thead tr {
-    background-color: #f4f4f4;
+    background-color: #f54d4d;
     text-align: left;
 }
 

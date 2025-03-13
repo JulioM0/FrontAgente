@@ -22,18 +22,19 @@ const Contenido = () => {
     Localizaciones();
   },[])
 
-   useEffect(() => {
-    const Dispositivos = async () => {
-      if(!localizacionSeleccionada) return;
-          const [id, organizationId] = localizacionSeleccionada.split(",");
+  useEffect(() => {
+    const obtenerDispositivoPorId = async () => {
+        if (!localizacionSeleccionada) return;
+        const id = localizacionSeleccionada.trim();
         try {
-            const response = await api.get(`devices?id=${id}&organizationId=${organizationId}`);
+            const response = await api.get(`devices?id=${id}`);
             setDispositivos(response.data);
         } catch (error) {
-            console.error("Error al obtener dispositivos:", error);
+            console.error("Error al obtener el dispositivo:", error);
         }
     };
-    Dispositivos();
+
+    obtenerDispositivoPorId();
 }, [localizacionSeleccionada]);
 
 const handleSeleccionLoc = (event) => {
@@ -50,16 +51,15 @@ const handleSeleccion = (event) => {
 return (
   <div className="Contenido">
     <h1 className="Titulo">Activos</h1>
+
     <div className="selectores">
-      
         <select className="select-locations" value={localizacionSeleccionada} onChange={handleSeleccionLoc}>
             <option value="">Selecciona una localizacion</option>
             {localizaciones.map(localizacion => (
-              <option key={localizacion.id} value={`${localizacion.id},${localizacion.organizationId}`}>{localizacion.name}, {localizacion.organizationId}</option>
+              <option key={localizacion.id} value={`${localizacion.id}`}>{localizacion.name}, {localizacion.id}</option>
             ))}
         </select>
-
-        <select value={dispositivoSeleccionado} onChange={handleSeleccion} disabled={!dispositivos.length}>
+        <select className="select-devices" value={dispositivoSeleccionado} onChange={handleSeleccion} disabled={!dispositivos.length}>
                     <option value="">Selecciona un dispositivo</option>
                     {dispositivos.map((dispositivo, index) => (
                         <option key={index} value={dispositivo.systemName}>
@@ -67,9 +67,10 @@ return (
                         </option>
                     ))}
         </select>
-        
+        <button className="btn-agregar">Agregar atributos</button>
     </div>
-    <div className="Tabla" style={{overflowX: 'auto'}}>
+    
+    <div className="Tabla">
     {infoDispositivo && (
         <table className="Tabla-Datos">
             <thead>
