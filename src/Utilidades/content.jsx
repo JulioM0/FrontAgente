@@ -3,148 +3,115 @@ import api from "../api.js";
 import "../Estilos/content.css";
 
 const Contenido = () => {
-   const [localizaciones, setLocalizacion] = useState([]);
-   const [localizacionSeleccionada, setLocalizacionSeleccionada] = useState("");
-   const [dispositivos, setDispositivos] = useState([]);
-   const [dispositivoSeleccionado, setDispositivoSeleccionado] = useState("");
-   const [infoDispositivo, setInfoDispositivo] = useState(null);
-
-   useEffect(() => {
-    const Localizaciones = async () => {
-        try{
-            const response = await api.get("locations")
-            setLocalizacion(response.data)
-        }
-        catch (error){
-            console.error("Error al obtener las localizaciones:", error)
-        }
-    }
-    Localizaciones();
-  },[])
+  const [localizaciones, setLocalizaciones] = useState([]);
+  const [localizacionSeleccionada, setLocalizacionSeleccionada] = useState("");
+  const [dispositivos, setDispositivos] = useState([]);
+  const [dispositivoSeleccionado, setDispositivoSeleccionado] = useState(null);
 
   useEffect(() => {
-    const obtenerDispositivoPorId = async () => {
-        if (!localizacionSeleccionada) return;
-        const id = localizacionSeleccionada.trim();
-        try {
-            const response = await api.get(`devices?id=${id}`);
-            setDispositivos(response.data);
-        } catch (error) {
-            console.error("Error al obtener el dispositivo:", error);
-        }
+    const obtenerLocalizaciones = async () => {
+      try {
+        const response = await api.get("locations");
+        setLocalizaciones(response.data);
+      } catch (error) {
+        console.error("Error al obtener las localizaciones:", error);
+      }
     };
+    obtenerLocalizaciones();
+  }, []);
 
-    obtenerDispositivoPorId();
-}, [localizacionSeleccionada]);
+  function formatearAtributos(clave) {
+    return clave
+        .replace(/_/g, " ") 
+        .toLowerCase() 
+        .replace(/\b\w/g, (l) => l.toUpperCase()); 
+}
 
-const handleSeleccionLoc = (event) => {
-  setLocalizacionSeleccionada(event.target.value)
-  setDispositivoSeleccionado("")
-  setInfoDispositivo(null);
-};
-const handleSeleccion = (event) => {
-    const selectedDevice = dispositivos.find(dispositivo => dispositivo.systemName === event.target.value);
-    setDispositivoSeleccionado(event.target.value)
-    setInfoDispositivo(selectedDevice)
-};
+  useEffect(() => {
+    const obtenerDispositivos = async () => {
+      if (!localizacionSeleccionada) return;
+      try {
+        const response = await api.get(`devices?id=${localizacionSeleccionada}`);
+        setDispositivos(response.data);
+      } catch (error) {
+        console.error("Error al obtener los dispositivos:", error);
+      }
+    };
+    obtenerDispositivos();
+  }, [localizacionSeleccionada]);
 
-return (
-  <div className="Contenido">
-    <h1 className="Titulo">Activos</h1>
+  const handleSeleccionLoc = (event) => {
+    setLocalizacionSeleccionada(event.target.value);
+    setDispositivos([]);
+    setDispositivoSeleccionado(null);
+  };
 
-    <div className="selectores">
+  const handleSeleccionDispositivo = (dispositivo) => {
+    setDispositivoSeleccionado(dispositivo);
+  };
+
+  const cerrarModal = () => {
+    setDispositivoSeleccionado(null);
+  };
+
+  return (
+    <div className="Contenido">
+      <h1 className="Titulo">Activos</h1>
+      <div className="selectores">
         <select className="select-locations" value={localizacionSeleccionada} onChange={handleSeleccionLoc}>
-            <option value="">Selecciona una localizacion</option>
-            {localizaciones.map(localizacion => (
-              <option key={localizacion.id} value={`${localizacion.id}`}>{localizacion.name}, {localizacion.id}</option>
-            ))}
+          <option value="">Selecciona una localización</option>
+          {localizaciones.map((localizacion) => (
+            <option key={localizacion.id} value={localizacion.id}>
+              {localizacion.name}
+            </option>
+          ))}
         </select>
-        <select className="select-devices" value={dispositivoSeleccionado} onChange={handleSeleccion} disabled={!dispositivos.length}>
-                    <option value="">Selecciona un dispositivo</option>
-                    {dispositivos.map((dispositivo, index) => (
-                        <option key={index} value={dispositivo.systemName}>
-                            {dispositivo.systemName}
-                        </option>
-                    ))}
-        </select>
+
         <button className="btn-agregar">Agregar atributos</button>
-    </div>
-    
-    <div className="Tabla">
-    {infoDispositivo && (
-        <table className="Tabla-Datos">
+      </div>
+
+      {dispositivos.length > 0 && (
+        <div className="Tabla">
+          <table className="Tabla-Datos">
             <thead>
-                <tr>
-                    <th>Nombre</th>
-                        <th>Organization</th>
-                        <th>Location</th>
-                        <th>NodeClass</th>
-                        <th>NodeRoleID</th>
-                        <th>RolePolicyID</th>
-                        <th>ApprovalStatus</th>
-                        <th>Offline</th>
-                        <th>SystemName</th>
-                        <th>dnsName</th>
-                        <th>Created</th>
-                        <th>LastContact</th>
-                        <th>LastUpdate</th>
-                        <th>IPAddresses</th>
-                        <th>MACAddresses</th>
-                        <th>Manufacturer</th>
-                        <th>OSName</th>
-                        <th>Architecture</th>
-                        <th>LastBootTime</th>
-                        <th>BuildNumber</th>
-                        <th>ReleaseId</th>
-                        <th>Locale</th>
-                        <th>Language</th>
-                        <th>NeedsReboot</th>
-                </tr>
+              <tr>
+                <th>Nombre del Dispositivo</th>
+                <th>Organización</th>
+                <th>IP</th>
+              </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>{infoDispositivo.displayName}</td>
-                    <td>{infoDispositivo.organizationId}</td>
-                    <td>{infoDispositivo.locationId}</td>
-                    <td>{infoDispositivo.nodeClass}</td>
-                    <td>{infoDispositivo.nodeRoleId}</td>
-                    <td>{infoDispositivo.rolePolicyId}</td>
-                    <td>{infoDispositivo.approvalStatus}</td>
-                    <td>{infoDispositivo.offline ? "Sí" : "No"}</td>
-                    <td>{infoDispositivo.systemName}</td>
-                    <td>{infoDispositivo.dnsName}</td>
-                    <td>{infoDispositivo.created}</td>
-                    <td>{infoDispositivo.lastContact}</td>
-                    <td>{infoDispositivo.lastUpdate}</td>
-                    <td> 
-                        <ul style={{ listStyleType: "none"}}>
-                        {infoDispositivo.ipAddresses.map((ip, index) => (
-                        <li key={index}>{ip}</li>
-                        ))}
-                        </ul>
-                    </td>
-                    <td>
-                    <ul style={{ listStyleType: "none"}}>
-                        {infoDispositivo.macAddresses.map((mac, index) => (
-                        <li key={index}>{mac}</li>
-                        ))}
-                        </ul>
-                    </td>
-                    <td>{infoDispositivo.os.manufacturer}</td>
-                    <td>{infoDispositivo.os.name}</td>
-                    <td>{infoDispositivo.os.architecture}</td>
-                    <td>{infoDispositivo.os.lastBootTime}</td>
-                    <td>{infoDispositivo.os.buildNumber}</td>
-                    <td>{infoDispositivo.os.releaseId}</td>
-                    <td>{infoDispositivo.os.locale}</td>
-                    <td>{infoDispositivo.os.language}</td>
-                    <td>{infoDispositivo.os.needsReboot ? "Si" : "No"}</td>
+              {dispositivos.map((dispositivo) => (
+                <tr key={dispositivo.systemName} onClick={() => handleSeleccionDispositivo(dispositivo)}>
+                  <td>{dispositivo.displayName}</td>
+                  <td>{dispositivo.organizationId}</td>
+                  <td>{dispositivo.publicIP}</td>
                 </tr>
+              ))}
             </tbody>
-        </table>
-    )}                  
+          </table>
+        </div>
+      )}
+
+      {dispositivoSeleccionado && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>Información del Dispositivo</h2>
+                <ul>
+                    {Object.entries(dispositivoSeleccionado).map(([key, value]) => (
+                    <li key={key}>
+                        <strong>{formatearAtributos(key)}:</strong> {typeof value === "object" ? JSON.stringify(value) : value.toString()}
+                    </li>
+                    ))}
+                </ul>
+            <button className="btn-cerrar" onClick={cerrarModal}>
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
-</div>
-    );
+  );
 };
+
 export default Contenido;

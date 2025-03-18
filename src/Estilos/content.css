@@ -58,21 +58,63 @@
 }
 
 .Tabla{
-    margin-left: 70px;
-    margin-right: 70px;
-    overflow-x: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .Tabla-Datos{
     margin-top: 50px;
-    width: 100%;
-    height: 100%;
+    width: 50%;
+    height: 50%;
     border-collapse: collapse;
     font-size: 16px;
     text-align: left;
     align-items: center;
     margin-bottom: 15px;
 }
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(112, 109, 109, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 70%;
+    max-height: 100%;
+    overflow-y: auto;
+  }
+
+  .modal-content ul{
+    list-style: none;
+  }
+  .modal-content li{
+    margin-top: 5px;
+  }
+  
+  .btn-cerrar {
+    margin-top: 15px;
+    padding: 8px 12px;
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .btn-cerrar:hover {
+    background: #cc0000;
+  }
 
 .seccion-info{
     margin-top: 20px;
@@ -99,6 +141,7 @@
 
 .Tabla-Datos tbody tr:nth-of-type(even) {
     background-color: #f9f9f9;
+    cursor: pointer;
 }
 
 .Tabla-Datos tbody tr:nth-of-type(odd) {
