@@ -84,38 +84,60 @@
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  
-  .modal-content {
+    overflow-y: auto;
+}
+
+.modal-content {
     background: white;
     padding: 20px;
     border-radius: 10px;
-    width: 70%;
-    max-height: 100%;
+    width: 80%;
+    max-width: 600px;
+    max-height: 70%;
     overflow-y: auto;
-  }
+    position: relative;
+}
 
-  .modal-content ul{
+
+.modal-content ul {
     list-style: none;
-  }
-  .modal-content li{
+    padding: 0;
+    margin: 0;
+}
+
+.modal-content li {
     margin-top: 5px;
-  }
+}
+
+.modal-content strong {
+    margin-right: 5px;
+}
+
+.modal-content h3 {
+    margin-top: 17px;
+    margin-bottom: 17px;
+}
   
-  .btn-cerrar {
+  
+.btn-cerrar {
     margin-top: 15px;
-    padding: 8px 12px;
-    background: #ff4d4d;
+    padding: 15px 15px;
+    background: #f12525;
+    font-weight: bold;
+    font-size: 15px;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-  }
-  
-  .btn-cerrar:hover {
-    background: #cc0000;
-  }
+    position: fixed; 
+    top: 80px; 
+    right: 350px; 
+    
+}
 
+.btn-cerrar:hover {
+    background: #cc0000;
+}
 .seccion-info{
     margin-top: 20px;
 }

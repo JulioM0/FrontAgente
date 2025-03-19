@@ -20,13 +20,6 @@ const Contenido = () => {
     obtenerLocalizaciones();
   }, []);
 
-  function formatearAtributos(clave) {
-    return clave
-        .replace(/_/g, " ") 
-        .toLowerCase() 
-        .replace(/\b\w/g, (l) => l.toUpperCase()); 
-}
-
   useEffect(() => {
     const obtenerDispositivos = async () => {
       if (!localizacionSeleccionada) return;
@@ -98,11 +91,50 @@ const Contenido = () => {
           <div className="modal-content">
             <h2>Información del Dispositivo</h2>
                 <ul>
-                    {Object.entries(dispositivoSeleccionado).map(([key, value]) => (
-                    <li key={key}>
-                        <strong>{formatearAtributos(key)}:</strong> {typeof value === "object" ? JSON.stringify(value) : value.toString()}
-                    </li>
-                    ))}
+                  <h3>Informacion General</h3>
+                    <li><strong>ID:</strong>{dispositivoSeleccionado.id}</li>
+                    <li><strong>OrganizationID:</strong>{dispositivoSeleccionado.organizationId}</li>
+                    <li><strong>LocationID:</strong>{dispositivoSeleccionado.locationId}</li>
+                    <li><strong>NodeClass:</strong>{dispositivoSeleccionado.nodeClass}</li>
+                    <li><strong>NodeRoleID:</strong>{dispositivoSeleccionado.nodeRoleId}</li>
+                    <li><strong>RolePolicyID:</strong>{dispositivoSeleccionado.rolePolicyId}</li>
+                    <li><strong>ApprovalStatus:</strong>{dispositivoSeleccionado.approvalStatus}</li>
+                    <li><strong>Offline:</strong>{dispositivoSeleccionado.offline ? "Si": "No"}</li>
+                    <li><strong>DisplayName:</strong>{dispositivoSeleccionado.displayName}</li>
+                    <li><strong>SystemName:</strong>{dispositivoSeleccionado.systemName}</li>
+                    <li><strong>DNSName:</strong>{dispositivoSeleccionado.dnsName}</li>
+                    <li><strong>Created:</strong>{new Date(dispositivoSeleccionado.created * 1000).toLocaleString()}</li>
+                    <li><strong>LastContact:</strong>{new Date(dispositivoSeleccionado.lastContact * 1000).toLocaleString()}</li>
+                    <li><strong>LastUpdate:</strong>{new Date(dispositivoSeleccionado.lastUpdate * 1000).toLocaleString()}</li>
+                    <li><strong>IPAddresses:</strong>{dispositivoSeleccionado.ipAddresses}</li>
+                    <li><strong>MacAddresses:</strong>{dispositivoSeleccionado.ipAddresses}</li>
+                    <li><strong>PublicIP:</strong>{dispositivoSeleccionado.publicIP}</li>
+                  <h3>Informacion del Sistema Operativo</h3>
+                    <li><strong>Manufacturer:</strong>{dispositivoSeleccionado.os.manufacturer}</li>
+                    <li><strong>Name:</strong>{dispositivoSeleccionado.os.name}</li>
+                    <li><strong>Architecture:</strong>{dispositivoSeleccionado.os.architecture}</li>
+                    <li><strong>LastBootTime:</strong>{new Date(dispositivoSeleccionado.os.lastBootTime * 1000).toLocaleString()}</li>
+                    <li><strong>BuildNumber:</strong>{dispositivoSeleccionado.os.buildNumber}</li>
+                    <li><strong>ReleaseID:</strong>{dispositivoSeleccionado.os.releaseId}</li>
+                    <li><strong>ServicePackMajorVersion:</strong>{dispositivoSeleccionado.os.servicePackMajorVersion}</li>
+                    <li><strong>ServicePackMinorVersion:</strong>{dispositivoSeleccionado.os.servicePackMinorVersion}</li>
+                    <li><strong>Locale:</strong>{dispositivoSeleccionado.os.locale}</li>
+                    <li><strong>Language:</strong>{dispositivoSeleccionado.os.language}</li>
+                    <li><strong>NeedsReboot:</strong>{dispositivoSeleccionado.os.needsReboot ? "Si": "No"}</li>
+                  <h3>Informacion del Sistema</h3>
+                    <li><strong>Name:</strong>{dispositivoSeleccionado.system.name}</li>
+                    <li><strong>Manufacturer:</strong>{dispositivoSeleccionado.system.manufacturer}</li>
+                    <li><strong>Model:</strong>{dispositivoSeleccionado.system.model}</li>
+                    <li><strong>BiosSerialNumber:</strong>{dispositivoSeleccionado.system.biosSerialNumber}</li>
+                    <li><strong>SerialNumber:</strong>{dispositivoSeleccionado.system.serialNumber}</li>
+                    <li><strong>Domain:</strong>{dispositivoSeleccionado.system.domain}</li>
+                    <li><strong>DomainRole:</strong>{dispositivoSeleccionado.system.domainRole}</li>
+                    <li><strong>NumberOfProcessors:</strong>{dispositivoSeleccionado.system.numberOfProcessors}</li>
+                    <li><strong>TotalPhysicalMemory:</strong>{(dispositivoSeleccionado.system.totalPhysicalMemory / (1024 * 1024 * 1024)).toFixed(2) + "GB"}</li>
+                    <li><strong>VirtualMachine:</strong>{dispositivoSeleccionado.system.virtualMachine ? "Si":"No"}</li>
+                    <li><strong>ChassisType:</strong>{dispositivoSeleccionado.system.chassisType}</li>
+
+        
                 </ul>
             <button className="btn-cerrar" onClick={cerrarModal}>
               Cerrar
