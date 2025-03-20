@@ -77,7 +77,7 @@ const Contenido = () => {
               {dispositivos.map((dispositivo) => (
                 <tr key={dispositivo.systemName} onClick={() => handleSeleccionDispositivo(dispositivo)}>
                   <td>{dispositivo.displayName}</td>
-                  <td>{dispositivo.organizationId}</td>
+                  <td>{dispositivo.organizationName}</td>
                   <td>{dispositivo.publicIP}</td>
                 </tr>
               ))}
