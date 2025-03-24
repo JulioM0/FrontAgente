@@ -6,6 +6,7 @@
 
 .Contenido{
     margin-top: 100px;
+    display: flex;
 }
 
 .Titulo{
@@ -16,54 +17,116 @@
     position: fixed;
 }
 
-.selectores{
-    color: black;
-    text-align: left;
-    margin-top: 50px;
+.Localizaciones {
+    background-color: #f0ecec;
+    padding: 20px;
+    border-radius: 5px;
+    width: 400px;
+    height: 570px;
     margin-left: 70px;
-}
-
-.select-locations{
-    color: black;
+    margin-top: 70px;
     margin-right: 20px;
-    border-radius: 10px;
-    border-color: #000000;
-    border-width: 2px;
-    height: 30px;
-    width: auto;
-    text-transform:uppercase;
-    font-weight: bold;
-    cursor: pointer;
 }
 
-.select-devices{
-    color: black;
-    margin-right: 70px;
-    border-radius: 10px;
-    border-color: #000000;
-    border-width: 2px;
-    height: 30px;
-    font-weight: bold;
-    cursor: pointer;
+.Localizaciones h1{
+    font-size: 23px;
+    margin-bottom: 10px;
 }
-
-.Tabla{
+  
+.localizacion-item {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+  
+.localizacion-item:hover, .dispositivo-item {
+    background-color: #c2bdbd;
+}
+  
+.nombre {
+    font-weight: bold;
+}
+  
+.cantidad {
+    color: gray;
+    margin-left: 10px;
 }
 
-.Tabla-Datos{
-    margin-top: 76px;
-    width: 50%;
-    height: 50%;
-    border-collapse: collapse;
-    font-size: 16px;
+.dispositivos {
+    flex: 1;
+    padding: 20px;
+    background-color: #d1cbcb;
+  }
+  
+  .titulo-dispositivos {
+    font-size: 24px;
+    margin-bottom: 20px; 
     text-align: left;
+  }
+  
+  .lista-dispositivos {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; 
+
+  }
+  
+  .dispositivo-item {
+    display: flex; 
     align-items: center;
-    margin-bottom: 15px;
-    margin-left: 250px;
-}
+    justify-content: space-between;
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+
+  .dispositivo-item.seleccionado {
+    border-left: 4px solid #2b8a3e;
+    background: #f0fff4;
+  }
+  
+  .icono-dispositivo {
+    font-size: 24px;
+    margin-right: 12px;
+  }
+  
+
+  .contenido-dispositivo {
+    flex: 1; 
+  }
+  
+  .nombre-dispositivo {
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0;
+  }
+  
+  .organizacion-dispositivo,
+  .ip-dispositivo {
+    margin: 2px 0;
+    color: #555;
+  }
+
+  .estado-dispositivo {
+    font-weight: bold;
+  }
+  
+  .estado-dispositivo.conectado {
+    color: #2b8a3e; /* Verde */
+  }
+  
+  .estado-dispositivo.desconectado {
+    color: #d9534f; /* Rojo */
+  }
+
+
 
 .modal-overlay {
     position: fixed;
@@ -140,67 +203,6 @@
     align-items: center;
     text-align: center;
 }
-
-.Tabla-Datos th,
-.Tabla-Datos td {
-    padding: 12px 15px;
-    border: 1px solid #000000;
-}
-
-.Tabla-Datos thead tr {
-    background-color: #f54d4d;
-    text-align: left;
-}
-
-.Tabla-Datos tbody tr:nth-of-type(even) {
-    background-color: #f9f9f9;
-    cursor: pointer;
-}
-
-.Tabla-Datos tbody tr:nth-of-type(odd) {
-    background-color: #ffffff;
-}
-
-.Tabla-Datos tbody tr:hover {
-    background-color: #f1f1f1;
-    cursor: pointer;
-}
-
-.Localizaciones {
-    background-color: #f0ecec;
-    margin-top: 75px;
-    margin-left: 70px;
-    padding: 10px;
-    border-radius: 5px;
-    width: auto;
-    height: auto;
-    position: fixed;
-}
-
-.Localizaciones h1{
-    font-size: 23px;
-    margin-bottom: 10px;
-}
-
   
-.localizacion-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-  
-.localizacion-item:hover {
-    background-color: #c2bdbd;
-}
-  
-.nombre {
-    font-weight: bold;
-}
-  
-.cantidad {
-    color: gray;
-    margin-left: 10px;
-}
+
   
