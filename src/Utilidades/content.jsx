@@ -125,6 +125,22 @@ useEffect(() => {
           <div className="modal-content">
             <h2>Dispositivo: {dispositivoSeleccionado.systemName}.</h2> 
             <h3 className={`estado-dispositivo ${dispositivoSeleccionado.offline ? "desconectado" : "conectado"}`}>{dispositivoSeleccionado.offline ? "Desconectado" : "Conectado"}</h3>
+            <div className="Add-atributo">
+               <strong>Agregar atributos:</strong>
+               <select className="Esquemas" id="esquema">
+                  <option value="">Selecciona una opcion</option>
+                  <option value="">1</option>
+                  <option value="">2</option>
+                  <option value="">3</option>
+               </select>
+               <select className="Objetos" id="objeto">
+                  <option value="">Selecciona una Opcion</option>
+                  <option value="">1</option>
+                  <option value="">2</option>
+                  <option value="">3</option>
+               </select>
+               <button className="btnAgregar">Agregar</button>
+            </div>
             <h4>General</h4>
               <div className="info-grid">
                 <div className="info-item" id="id"><span className="label">ID:</span><span className="value">{dispositivoSeleccionado.id}</span></div>
