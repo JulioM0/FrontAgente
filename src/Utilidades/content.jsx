@@ -8,6 +8,20 @@ const Contenido = () => {
   const [dispositivos, setDispositivos] = useState([]);
   const [dispositivoSeleccionado, setDispositivoSeleccionado] = useState(null);
   const [dispositivosPorLocalizacion, setDispositivosPorLocalizacion] = useState({});
+  const [esquemas, setEsquemas] = useState({});
+
+useEffect(() => {
+  const obtenerEsquemas = async () => {
+    try{
+      const response = await api.get("esquemas");
+      setEsquemas(response.data);
+    }
+    catch (error){
+      console.error("Error al obtener los esquemas", error)
+    }
+  };
+  obtenerEsquemas();
+}, []);
 
   useEffect(() => {
     const obtenerLocalizaciones = async () => {
