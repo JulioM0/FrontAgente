@@ -5,16 +5,23 @@
 }
 
 .Contenido{
-    margin-top: 100px;
+    margin-top: 70px;
     display: flex;
+    flex-direction: column; 
+    gap: 20px; 
+    padding: 20px;
+}
+
+.Contenido-general{
+  display: flex; 
+  gap: 20px; 
 }
 
 .Titulo{
     color: black;
     text-align: left;
     margin-left: 70px;
-    font-size: 20px;
-    position: fixed;
+    font-size: 40px;
 }
 
 .Localizaciones {
@@ -22,19 +29,20 @@
     padding: 20px;
     border-radius: 5px;
     width: 400px;
-    height: 540px;
-    margin-left: 70px;
-    margin-top: 70px;
+    height: auto;
     margin-right: 20px;
     margin-bottom: 20px;
-    position: fixed;
+    position: static;
+    margin-left: 70px;
+    max-height: 80vh; 
+    overflow-y: auto; 
 }
 
 .Localizaciones h1{
     font-size: 23px;
     margin-bottom: 10px;
 }
-  
+ 
 .localizacion-item {
     display: flex;
     justify-content: space-between;
@@ -63,11 +71,10 @@
 .dispositivos {
     flex: 1;
     padding: 20px;
-    background-color: #d1cbcb;
-    margin-bottom: 20px;
-    margin-top: 70px;
+    background-color: #f0ecec;
+    margin-bottom: 10px;
     margin-right: 70px;
-    margin-left: 550px;
+    margin-left: 50px;
     border-radius: 5px;
   }
   
@@ -81,6 +88,33 @@
   display: flex;
   flex-direction: column;
   gap: 12px; 
+  max-height: 80vh; 
+  overflow-y: auto; 
+}
+
+.lista-dispositivos::-webkit-scrollbar, .Localizaciones::-webkit-scrollbar {
+  width: 12px;
+  background: white;
+  border-radius: 10px;
+}
+
+.lista-dispositivos::-webkit-scrollbar, .Localizaciones::-webkit-scrollbar {
+  width: 15px;
+}
+
+.lista-dispositivos::-webkit-scrollbar-track, .Localizaciones::-webkit-scrollbar-track {
+  background: #ffffff; 
+  border-radius: 10px; 
+}
+
+.lista-dispositivos::-webkit-scrollbar-thumb, .Localizaciones::-webkit-scrollbar-thumb {
+  background: #c4a3a3; 
+  border-radius: 10px;
+  border: 3px solid #ffffff;
+}
+
+.lista-dispositivos::-webkit-scrollbar-thumb:hover, .Localizaciones::-webkit-scrollbar-thumb:hover {
+  background: #634b59; 
 }
   
 .dispositivo-item {
@@ -95,6 +129,8 @@
   cursor: pointer;
   transition: background 0.3s;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-top: 5px;
+  margin-right: 10px;
 }
 
 
