@@ -108,13 +108,13 @@
 }
 
 .lista-dispositivos::-webkit-scrollbar-thumb, .Localizaciones::-webkit-scrollbar-thumb {
-  background: #c4a3a3; 
+  background: #646464; 
   border-radius: 10px;
   border: 3px solid #ffffff;
 }
 
 .lista-dispositivos::-webkit-scrollbar-thumb:hover, .Localizaciones::-webkit-scrollbar-thumb:hover {
-  background: #634b59; 
+  background: #74626c; 
 }
   
 .dispositivo-item {
@@ -252,19 +252,8 @@
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); 
 }
 
-.btn-cerrar {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
 
 .btn-cerrar {
-    margin-top: 12px;
     padding: 18px 15px;
     background: #ffffff;
     font-weight: bold;
@@ -274,27 +263,50 @@
     border-radius: 5px;
     cursor: pointer;
     position: fixed; 
-    top: 45px; 
+    top: 60px; 
     right: 220px; 
-    
+    transition: background-color 0.3s;
 }
 
 .btnAgregar{
   margin-left: 15px;
+  margin-right: 15px;
+  padding: 3px 12px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  border-color: #000000;
+  border-style: groove;
+  cursor: pointer;
+  border-width: 1px;
 }
+
+.btnQuitarSeleccion{
+  color: #cc0000;
+  padding: 3px 12px;
+  background: #ffffff;
+  border-radius: 5px;
+  border-color: #000000;
+  border-style: groove;
+  cursor: pointer;
+  border-width: 1px;
+  transition: background-color 0.3s;
+}
+
 .add-atributo{
   margin-top: 15px;
 }
 
-.Esquemas{
+.Esquemas, .Objetos{
   margin-left: 15px;
-  margin-right: 15px;
+  margin-right: 5px;
+  cursor: pointer;
+  border-style: groove;
 }
 
-
-.btn-cerrar:hover {
+.btn-cerrar:hover, .btnQuitarSeleccion:hover {
     background: #cc0000;
     color: white;
+    border-style: none;
 }
 .seccion-info{
     margin-top: 20px;
