@@ -116,72 +116,114 @@ const Contenido = () => {
     }
   };
 
+  
   const transformarDatosDinamicamente = (dispositivo) => {
     if (!dispositivo) return {};
-  
-    const objetoDinamico = {};
-  
-    Object.keys(dispositivo).forEach((clave) => {
-      const valor = dispositivo[clave];
-      if (typeof valor === "object" && valor !== null) {
-        Object.keys(valor).forEach((subClave) => {
-          const subValor = valor[subClave];
-  
-          if (typeof subValor !== "object") {
-            if (!objetoDinamico[clave]) objetoDinamico[clave] = [];
-            objetoDinamico[clave].push({
-              label: subClave.replace(/([A-Z])/g, " $1").trim(),
-              value: subValor,
+    const formatValue = (val, key = '') => {
+      if (val === null || val === undefined) return 'N/A';
+      if (typeof val === 'boolean') return val ? 'Sí' : 'No';
+      if (typeof val === 'number') {
+        if (/(time|date|boot|since|timestamp|created|contact|update|modified|changed)/i.test(key)) {
+          try {
+            const multiplier = val < 1e12 ? 1000 : 1;
+            const date = new Date(val * multiplier);
+            return date.toLocaleString('es-ES', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit'
             });
+          } catch {
+            return val.toString();
           }
-        });
-      } 
-      else if (Array.isArray(valor)) {
-        if (clave.toLowerCase().includes("ip"))
-        {
-          objetoDinamico[clave] = [
-            {
-                label: clave.replace(/([A-Z])/g, " $1").trim(),
-                value: valor.join(", "),
-            },
-        ];
-        } else {
-          objetoDinamico[clave] = [
-            {
-              label: clave.replace(/([A-Z])/g, " $1").trim(),
-              value: valor.join(", "),
-            },
-          ];
         }
-      } 
-      else {
-        objetoDinamico["General"] = objetoDinamico["General"] || [];
-        objetoDinamico["General"].push({
-          label: clave.replace(/([A-Z])/g, " $1").trim(),
-          value: valor,
-        });
+        if (/(size|capacity|space|bytes|memory|ram|disk)/i.test(key)) {
+          const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+          let unitIndex = 0;
+          while (val >= 1024 && unitIndex < units.length - 1) {
+            val /= 1024;
+            unitIndex++;
+          }
+          return `${val.toFixed(2)} ${units[unitIndex]}`;
+        }
+        if (/(speed|clock|frequency|hz)/i.test(key)) {
+          const units = ['Hz', 'KHz', 'MHz', 'GHz'];
+          let unitIndex = 0;
+          while (val >= 1000 && unitIndex < units.length - 1) {
+            val /= 1000;
+            unitIndex++;
+          }
+          return `${val.toFixed(2)} ${units[unitIndex]}`;
+        }
+        if (/(percent|percentage|usage|utilization)/i.test(key) && val <= 1) {
+          return `${(val * 100).toFixed(2)}%`;
+        }
       }
-    });
+      return val.toString();
+    };
+    const processEntry = (key, val, parentKey = '') => {
+      const label = key.replace(/([A-Z])/g, " $1").trim();
+      if (val === null || val === undefined) return null;
+      if (typeof val === 'boolean' || typeof val === 'number' || typeof val === 'string') {
+        return {
+          label: parentKey ? `${parentKey} > ${label}` : label,
+          value: formatValue(val, key),
+          rawValue: val
+        };
+      }
+      if (Array.isArray(val)) {
+        if (/ipaddresses|macaddresses/i.test(key)) {
+          const joined = val.filter(Boolean).map(v => `"${v}"`).join(', ');
+          return { label, value: joined || 'N/A' };
+        }
+        return val.flatMap((item, i) => 
+          processEntry(`${label} ${i+1}`, item, parentKey)
+        ).filter(Boolean);
+      }
+      if (typeof val === 'object') {
+        return Object.entries(val).flatMap(([k, v]) => 
+          processEntry(k, v, parentKey ? `${parentKey} > ${label}` : label)
+        );
+      }
+    };
+    const objetoDinamico = {};
+    Object.entries(dispositivo).forEach(([key, val]) => {
+      const result = processEntry(key, val);
+      if (!result) return;
   
+      const results = Array.isArray(result) ? result : [result];
+      results.forEach(item => {
+        const group = /volumes?|processors?/i.test(item.label) 
+          ? item.label.split(' ')[0] 
+          : item.label.includes('>') ? item.label.split('>')[0].trim() : 'General';
+        objetoDinamico[group] = objetoDinamico[group] || [];
+        objetoDinamico[group].push(item);
+      });
+    });
     return objetoDinamico;
   };
-
+  
   const obtenerOpcionesParaSelect = (dispositivo) => {
     if (!dispositivo) return [];
     const listaDispositivo = transformarDatosDinamicamente(dispositivo);
     const opciones = [];
-    Object.values(listaDispositivo).forEach(seccion => {
-      seccion.forEach(({label, value}) => {
-        if (value && !opciones.some(op => op.value === value)) {
+    Object.entries(listaDispositivo).forEach(([seccion, valores]) => {
+      valores.forEach(({label, value}) => {
+        const safeValue = value ?? "";
+        const safeLabel = label ?? "Sin etiqueta";
+        if (safeValue !== "") {
           opciones.push({
-            label: `${label}: ${value}`,
-            value: value
+            label: `${safeLabel}: ${safeValue}`,
+            value: safeValue
           });
         }
       });
     });
     return opciones;
   };
+
   const handleSeleccionDispositivo = (dispositivo) => {
     setDispositivoSeleccionado(dispositivo);
   };
@@ -272,21 +314,30 @@ const Contenido = () => {
                 </select>
                 <button className="btnAgregar">Agregar</button>
                 <button className="btnQuitarSeleccion" onClick={handleQuitarSeleccionItem}>Quitar Seleccion</button>
-                  <div className="info-grid2">
-                      {atributos.map((atributo) => (
-                        <div className="info-item" key={atributo.tipoObjetoAtributoID} value={atributo.tipoObjetoAtributoID}>
-                          <strong>{atributo.tipoObjetoAtributoID}, {atributo.tipoObjetoAtributo}</strong>
-                          <select className="Info-dispositivos">
-                            <option value="">-- Seleccionar --</option>
-                            {obtenerOpcionesParaSelect(dispositivoSeleccionado).map((opcion, index) => (
-                              <option key={index} value={opcion.value}>
+                <div className="info-grid2">
+                  {atributos.map((atributo) => {
+                    const opciones = obtenerOpcionesParaSelect(dispositivoSeleccionado);
+                    return (
+                      <div className="info-item" key={atributo.tipoObjetoAtributoID}>
+                        <strong>{atributo.tipoObjetoAtributoID}, {atributo.tipoObjetoAtributo}</strong>
+                        <select className="Info-dispositivos">
+                          <option value="">-- Seleccionar --</option>
+                          {opciones.map((opcion, index) => {
+                            const optionValue = opcion.value?.toString() ?? "";
+                            return (
+                              <option 
+                                key={`${index}-${optionValue}`} 
+                                value={optionValue}
+                              >
                                 {opcion.label}
                               </option>
-                            ))}
-                          </select>
-                        </div>
-                      ))}
-                  </div>
+                            );
+                          })}
+                        </select>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
               {Object.entries(transformarDatosDinamicamente(dispositivoSeleccionado)).map(([seccion, datos]) => (
                 <div key={seccion}>
