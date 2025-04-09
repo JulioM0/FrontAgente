@@ -13,6 +13,7 @@ const Contenido = () => {
   const [objetos, setObjetos] = useState([]);
   const [objetoSeleccionado, setObjetoSeleccionado] = useState(null);
   const [atributos, setAtributos] = useState([]);
+  const [valoresAtributos, setValoresAtributos] = useState({});
 
   useEffect(() => {
     const obtenerEsquemas = async () => {
@@ -101,21 +102,34 @@ const Contenido = () => {
 
   const handleObjetoChange = async (e) => {
     const id = e.target.value;
-    setObjetoSeleccionado(id)
-
-    if (id) {
-      try {
-        const respuesta = await api.get(`tipoObjetoAtributo?tipoObjetoID=${id}`);
-        console.log("Objetos recibidos:", respuesta.data);
-        setAtributos(respuesta.data);
-      } catch (error) {
-        console.error("Error al cargar los atributos:", error);
-      }
-    } else {
-      setAtributos([]);
-    }
+    const res = await api.get(`/tipoObjetoAtributo?tipoObjetoId=${id}`);
+    setAtributos(res.data);
+    setValoresAtributos({});
   };
-
+  
+  const handleChange = (atributoId, valor) => {
+    setValoresAtributos(prev => {
+      const actualizado = { ...prev, [atributoId]: valor };
+      console.log(actualizado);
+      return actualizado;
+    });
+  };
+  
+  const handleGuardar = async () => {
+    for (const ObjetoAtributoID of Object.keys(valoresAtributos)) {
+      const data = {
+        ObjetoAtributoID: parseInt(ObjetoAtributoID),
+        Valor: valoresAtributos[ObjetoAtributoID]
+      }; 
+      try {
+        await api.post(`valorAtributo`, data);
+      } catch (error) {
+        console.error(`Error guardando atributo ${ObjetoAtributoID}`, error);
+      }
+    }
+  
+    alert("Todos los valores fueron guardados");
+  };
   
   const transformarDatosDinamicamente = (dispositivo) => {
     if (!dispositivo) return {};
@@ -204,6 +218,7 @@ const Contenido = () => {
     });
     return objetoDinamico;
   };
+
   
   const obtenerOpcionesParaSelect = (dispositivo) => {
     if (!dispositivo) return [];
@@ -211,7 +226,7 @@ const Contenido = () => {
     const opciones = [];
     Object.entries(listaDispositivo).forEach(([seccion, valores]) => {
       valores.forEach(({label, value}) => {
-        const safeValue = value ?? "";
+        const safeValue = (value ?? "").replace(/"/g, '');
         const safeLabel = label ?? "Sin etiqueta";
         if (safeValue !== "") {
           opciones.push({
@@ -312,7 +327,7 @@ const Contenido = () => {
                       </option>
                     ))}
                 </select>
-                <button className="btnAgregar">Agregar</button>
+                <button className="btnAgregar" onClick={handleGuardar}>Agregar</button>
                 <button className="btnQuitarSeleccion" onClick={handleQuitarSeleccionItem}>Quitar Seleccion</button>
                 <div className="info-grid2">
                   {atributos.map((atributo) => {
@@ -320,15 +335,16 @@ const Contenido = () => {
                     return (
                       <div className="info-item" key={atributo.tipoObjetoAtributoID}>
                         <strong>{atributo.tipoObjetoAtributoID}, {atributo.tipoObjetoAtributo}</strong>
-                        <select className="Info-dispositivos">
+                        <select
+                          className="Info-dispositivos"
+                          value={valoresAtributos[atributo.tipoObjetoAtributoID] || ""}
+                          onChange={(e) => handleChange(atributo.tipoObjetoAtributoID, e.target.value)}
+                        >
                           <option value="">-- Seleccionar --</option>
                           {opciones.map((opcion, index) => {
                             const optionValue = opcion.value?.toString() ?? "";
                             return (
-                              <option 
-                                key={`${index}-${optionValue}`} 
-                                value={optionValue}
-                              >
+                              <option key={`${index}-${optionValue}`} value={optionValue}>
                                 {opcion.label}
                               </option>
                             );
