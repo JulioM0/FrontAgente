@@ -220,15 +220,22 @@ const Contenido = () => {
   };
 
   
-  const obtenerOpcionesParaSelect = (dispositivo) => {
+  const obtenerOpcionesParaSelect = (dispositivo, valoresSeleccionados, atributoIdActual) => {
     if (!dispositivo) return [];
     const listaDispositivo = transformarDatosDinamicamente(dispositivo);
     const opciones = [];
+
+    const valoresSeleccionadosSet = new Set(
+      Object.entries(valoresSeleccionados)
+        .filter(([id, val]) => id !== atributoIdActual.toString()) 
+        .map(([_, val]) => val)
+    );
+
     Object.entries(listaDispositivo).forEach(([seccion, valores]) => {
       valores.forEach(({label, value}) => {
         const safeValue = (value ?? "").replace(/"/g, '');
         const safeLabel = label ?? "Sin etiqueta";
-        if (safeValue !== "") {
+        if (safeValue !== "" && !valoresSeleccionadosSet.has(safeValue)) {
           opciones.push({
             label: `${safeLabel}: ${safeValue}`,
             value: safeValue
@@ -258,7 +265,7 @@ const Contenido = () => {
 
   return (
     <div className="Contenido">
-        <h1 className="Titulo">Activos</h1>
+      {/*<h1 className="Titulo">Activos</h1>*/}
       <div className="Contenido-general">
         <div className="Localizaciones">
             <h1>Localizaciones</h1>
@@ -331,7 +338,7 @@ const Contenido = () => {
                 <button className="btnQuitarSeleccion" onClick={handleQuitarSeleccionItem}>Quitar Seleccion</button>
                 <div className="info-grid2">
                   {atributos.map((atributo) => {
-                    const opciones = obtenerOpcionesParaSelect(dispositivoSeleccionado);
+                    const opciones = obtenerOpcionesParaSelect(dispositivoSeleccionado, valoresAtributos, atributo.tipoObjetoAtributoID);
                     return (
                       <div className="info-item" key={atributo.tipoObjetoAtributoID}>
                         <strong>{atributo.tipoObjetoAtributoID}, {atributo.tipoObjetoAtributo}</strong>
