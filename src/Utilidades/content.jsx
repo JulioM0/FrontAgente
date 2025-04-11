@@ -102,6 +102,7 @@ const Contenido = () => {
 
   const handleObjetoChange = async (e) => {
     const id = e.target.value;
+    setObjetoSeleccionado(id);
     const res = await api.get(`/tipoObjetoAtributo?tipoObjetoId=${id}`);
     setAtributos(res.data);
     setValoresAtributos({});
@@ -110,7 +111,7 @@ const Contenido = () => {
   const handleChange = (atributoId, valor) => {
     setValoresAtributos(prev => {
       const actualizado = { ...prev, [atributoId]: valor };
-      console.log(actualizado);
+      construirObjeto(actualizado);
       return actualizado;
     });
   };
@@ -245,6 +246,28 @@ const Contenido = () => {
     });
     return opciones;
   };
+
+  const construirObjeto = (valores = valoresAtributos) => {
+    const objeto = {
+      Descripcion: dispositivoSeleccionado?.systemName || "Sin nombre",
+      ProductoInventarioID: 0,
+      ObjetoAtributos: {
+        ObjetoAtributos: atributos.map((atributo) => {
+          const valorSeleccionado = valores[atributo.tipoObjetoAtributoID] || "";
+          return {
+            ObjetoAtributoID: atributo.tipoObjetoAtributoID,
+            TipoObjetoAtributoID: atributo.tipoObjetoAtributoID,
+            ObjetoID: objetoSeleccionado || 0,
+            Valor: valorSeleccionado,
+            TipoAtributo: "Predeterminado"
+          };
+        })
+      }
+    };
+  
+    console.log("Objeto actualizado:", objeto);
+  };
+
 
   const handleSeleccionDispositivo = (dispositivo) => {
     setDispositivoSeleccionado(dispositivo);

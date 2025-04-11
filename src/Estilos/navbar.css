@@ -24,7 +24,7 @@
 }
 
 .nav-bar {
-    background: linear-gradient(to right, rgb(64, 14, 182), rgb(218, 42, 71));
+    background: linear-gradient(to right, rgb(87, 14, 182), rgb(218, 42, 71));
     display: flex;
     padding: 0 400px;
 }
@@ -48,9 +48,18 @@
     height: 5px;
 }
 
+.nav-item:hover{
+    color: orange;
+}
+
 .info{
     color: rgba(64, 14, 182, 0.801);
     font-weight: bold;
     font-size: 18px;
     margin-right: 60px;
+    transition: all 0.3s ease;
+}
+
+.info:hover{
+    color: orange;
 }
