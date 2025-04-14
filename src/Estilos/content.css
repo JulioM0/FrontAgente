@@ -331,75 +331,99 @@
     text-align: center;
 }
   
-@media (max-width: 1024px) {
+@media screen and (max-width: 1200px) {
   .Contenido-general {
     flex-direction: column;
   }
 
   .Localizaciones {
     width: 100%;
-    margin: 0 auto;
+    margin: 0;
+    margin-bottom: 20px;
   }
 
   .dispositivos {
-    margin: 20px auto;
-    width: 100%;
-  }
-
-  .Titulo {
-    margin-left: 20px;
-    font-size: 32px;
+    margin: 0;
   }
 
   .btn-cerrar {
-    top: 20px;
-    right: 20px;
+    position: static;
+    display: block;
+    margin: 20px auto;
   }
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .Titulo {
-    font-size: 26px;
+    font-size: 32px;
+    margin-left: 20px;
+  }
+
+  .Localizaciones h1 {
+    font-size: 20px;
+  }
+
+  .titulo-dispositivos {
+    font-size: 20px;
   }
 
   .modal-content {
     width: 95%;
-    padding: 15px;
+    max-width: none;
+    height: 90%;
   }
 
-  .info-grid,
-  .info-grid2 {
-    grid-template-columns: 1fr;
+  .info-grid, .info-grid2 {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
 
   .btn-cerrar {
-    font-size: 13px;
-    padding: 12px;
+    padding: 12px 10px;
+    font-size: 14px;
+  }
+
+  .btnAgregar, .btnQuitarSeleccion {
+    margin: 5px;
+    padding: 5px 10px;
   }
 }
 
-@media (max-width: 480px) {
+@media screen and (max-width: 480px) {
   .Titulo {
-    font-size: 22px;
+    font-size: 26px;
     margin-left: 10px;
+  }
+
+  .Localizaciones, .dispositivos {
+    padding: 10px;
   }
 
   .Localizaciones h1 {
     font-size: 18px;
   }
 
-  .nombre-dispositivo {
-    font-size: 14px;
+  .titulo-dispositivos {
+    font-size: 18px;
+  }
+
+  .dispositivo-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .info-grid, .info-grid2 {
+    grid-template-columns: 1fr;
   }
 
   .modal-content h2 {
     font-size: 20px;
   }
 
-  .btnAgregar, .btnQuitarSeleccion {
-    padding: 2px 8px;
-    font-size: 13px;
+  .modal-content h3, 
+  .modal-content h4, 
+  .modal-content h5, 
+  .modal-content h6 {
+    font-size: 18px;
   }
 }
-
-  
