@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import api from "../api.js";
 import "../Estilos/content.css";
+import {obtenerEsquemas} from "../servicios/esquemaService.js"
+import {esquemaChange, objetoChange} from "../servicios/atributosService.js";
+import {obtenerLocalizaciones} from "../servicios/localizacionService.js";
+import {obtenerDispositivos, contarDispositivos} from "../servicios/dispositivoService.js"
 
 const Contenido = () => {
   const [localizaciones, setLocalizaciones] = useState([]);
@@ -16,64 +20,19 @@ const Contenido = () => {
   const [valoresAtributos, setValoresAtributos] = useState({});
 
   useEffect(() => {
-    const obtenerEsquemas = async () => {
-      try{
-        const response = await api.get("esquemas");
-        setEsquemas(response.data);
-      }
-      catch (error){
-        console.error("Error al obtener los esquemas", error)
-      }
-    };
-    obtenerEsquemas();
+    obtenerEsquemas(setEsquemas);
+  },[]);
+
+  useEffect(() => {
+    obtenerLocalizaciones(setLocalizaciones);
   }, []);
 
   useEffect(() => {
-    const obtenerLocalizaciones = async () => {
-      try {
-        const response = await api.get("locations");
-        setLocalizaciones(response.data);
-      } catch (error) {
-        console.error("Error al obtener las localizaciones:", error);
-      }
-    };
-    obtenerLocalizaciones();
-  }, []);
-
-  useEffect(() => {
-    const obtenerDispositivos = async () => {
-      if (!localizacionSeleccionada) return;
-      try {
-        const response = await api.get(`devices?id=${localizacionSeleccionada}`);
-        setDispositivos(response.data);
-      } catch (error) {
-        console.error("Error al obtener los dispositivos:", error);
-      }
-    };
-    obtenerDispositivos();
+    obtenerDispositivos(setDispositivos, localizacionSeleccionada)
   }, [localizacionSeleccionada]);
 
   useEffect(() => {
-    const contarDispositivos = async () => {
-      try{
-        const promesas = localizaciones.map((localizacion) =>
-          api.get(`devices?id=${localizacion.id}`).then((response) => ({
-            id: localizacion.id,
-            total: response.data.length,
-          }))
-        );
-        const resultado = await Promise.all(promesas);
-        const conteo = resultado.reduce((acc, {id, total }) => {
-          acc[id] = total;
-          return acc;
-        }, {})
-
-        setDispositivosPorLocalizacion(conteo);
-      }
-      catch (error){
-        console.error("Error al obtener los dispositivos", error);
-      }
-    }
+    contarDispositivos(setDispositivosPorLocalizacion, localizaciones)
     if(localizaciones.length > 0) contarDispositivos();
   }, [localizaciones])
 
@@ -86,26 +45,13 @@ const Contenido = () => {
   const handleEsquemaChange = async (e) => {
     const id = e.target.value;
     setEsquemaSeleccionado(id);
-  
-    if (id) {
-      try {
-        const respuesta = await api.get(`tipoObjeto?esquemaID=${id}`);
-        console.log("Objetos recibidos:", respuesta.data);
-        setObjetos(respuesta.data);
-      } catch (error) {
-        console.error("Error al cargar los objetos:", error);
-      }
-    } else {
-      setObjetos([]);
-    }
+    esquemaChange(setObjetos, id);
   };
 
   const handleObjetoChange = async (e) => {
     const id = e.target.value;
     setObjetoSeleccionado(id);
-    const res = await api.get(`/tipoObjetoAtributo?tipoObjetoId=${id}`);
-    setAtributos(res.data);
-    setValoresAtributos({});
+    objetoChange(setAtributos, setValoresAtributos, id)
   };
   
   const handleChange = (atributoId, valor) => {
