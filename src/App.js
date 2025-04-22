@@ -1,4 +1,4 @@
-import './Estilos/App.css';
+import "./others/Estilos/App.css"
 import Navbar from './templates/navbar';
 import Contenido from './pages/content'
 
