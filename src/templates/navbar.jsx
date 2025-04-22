@@ -1,5 +1,5 @@
 import React from "react";
-import "../Estilos/navbar.css";
+import "../others/Estilos/navbar.css"
 import logo from "../assets/logo-nova.svg";
 
 const Navbar = () => {

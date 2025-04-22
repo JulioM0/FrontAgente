@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
-import {obtenerEsquemas} from "../servicios/esquemaService.js"
-import {esquemaChange, objetoChange} from "../servicios/atributosService.js";
-import {obtenerLocalizaciones} from "../servicios/localizacionService.js";
-import {obtenerDispositivos, contarDispositivos} from "../servicios/dispositivoService.js";
-import { guardar} from "../servicios/Guardar.js";
-import { transformarDatosDinamicamente, obtenerOpcionesParaSelect } from "../extras/transformarDatos.js";
-import "../Estilos/content.css";
+import {obtenerEsquemas} from "../services/esquemaService.js"
+import {esquemaChange, objetoChange} from "../services/atributosService.js";
+import {obtenerLocalizaciones} from "../services/localizacionService.js";
+import {obtenerDispositivos, contarDispositivos} from "../services/dispositivoService.js";
+import { guardar} from "../services/Guardar.js";
+import { transformarDatosDinamicamente, obtenerOpcionesParaSelect } from "../others/extras/transformarDatos.js";
+import {Button} from "../atoms/button.js"
+import {EsquemaSelect, ObjetoSelect, AtributoSelect} from "../atoms/selects.js"
+import { LocalizacionItem } from "../molecules/localizaciones.js";
+import { DispositivoItem } from "../molecules/dispositivos.js";
+import "../others/Estilos/content.css"
 
 const Contenido = () => {
   const [localizaciones, setLocalizaciones] = useState([]);
@@ -105,45 +109,31 @@ const Contenido = () => {
   return (
     <div className="Contenido">
       <div className="Contenido-general">
-        <div className="Localizaciones">
-            <h1>Localizaciones</h1>
-            <div className="lista-localizaciones">
-              {localizaciones.map((localizacion) => (
-                <div
-                  key={localizacion.id}
-                  className={`localizacion-item ${localizacionSeleccionada === localizacion.id ? "seleccionado" : ""}`}
-                  onClick={() => handleSeleccionLoc(localizacion.id)}
-                >
-                  <span className="nombre">{localizacion.name}</span>
-                  <span className="cantidad">
-                    {dispositivosPorLocalizacion[localizacion.id] || 0} dispositivos
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+      <div className="Localizaciones">
+        <h1>Localizaciones</h1>
+        <div className="lista-localizaciones">
+          {localizaciones.map((localizacion) => (
+            <LocalizacionItem
+              key={localizacion.id}
+              localizacion={localizacion}
+              seleccionada={localizacionSeleccionada === localizacion.id}
+              onSeleccionar={handleSeleccionLoc}
+              cantidad={dispositivosPorLocalizacion[localizacion.id] || 0}
+            />
+          ))}
+        </div>
+      </div>
         {dispositivos.length > 0 && (
           <div className="dispositivos">
             <h1 className="titulo-dispositivos">Dispositivos</h1>
             <div className="lista-dispositivos">
               {dispositivos.map((dispositivo) => (
-              <div
+              <DispositivoItem
               key={dispositivo.systemName}
-              className={`dispositivo-item ${
-                dispositivoSeleccionado === dispositivo.systemName ? "seleccionado" : ""
-              }`}
-              onClick={() => handleSeleccionDispositivo(dispositivo)}
-              >
-              <div className="icono-dispositivo">🖥️</div>
-              <div className="contenido-dispositivo">
-                <h2 className="nombre-dispositivo">{dispositivo.systemName}</h2>
-                <p className="organizacion-dispositivo">{dispositivo.organizationName}</p>
-                <p className="ip-dispositivo">{dispositivo.publicIP}</p>
-              </div>
-              <div className={`estado-dispositivo ${dispositivo.offline ? "desconectado" : "conectado"}`}>
-                {dispositivo.offline ? "Desconectado" : "Conectado"}
-              </div>
-            </div>
+              dispositivo={dispositivo}
+              seleccionado={dispositivoSeleccionado === dispositivo.systemName}
+              onSeleccionar={handleSeleccionDispositivo}
+            />
             ))}
             </div>
           </div>
@@ -155,47 +145,29 @@ const Contenido = () => {
               <h3 className={`estado-dispositivo ${dispositivoSeleccionado.offline ? "desconectado" : "conectado"}`}>{dispositivoSeleccionado.offline ? "Desconectado" : "Conectado"}</h3>
               <h4>Agregar atributos</h4>
                 <div className="Add-atributo">
-                <select onChange={handleEsquemaChange} value={esquemaSeleccionado} className="Esquemas">
-                  <option value="">Selecciona un Esquema</option>
-                  {esquemas.map((esquema) => (
-                    <option key={esquema.esquemaID} value={esquema.esquemaID}>
-                      {esquema.esquema}
-                    </option>
-                  ))}
-                </select>
-                <select disabled={objetos.length === 0} onChange={handleObjetoChange} value={objetoSeleccionado} className="Objetos">
-                  <option value="">-- Seleccionar --</option>
-                  {objetos.length > 0 &&
-                    objetos.map((objeto) => (
-                      <option key={objeto.tipoObjetoID} value={objeto.tipoObjetoID}>
-                        {objeto.tipoObjeto}
-                      </option>
-                    ))}
-                </select>
-                <button className="btnAgregar" onClick={handleGuardar}>Agregar</button>
-                <button className="btnQuitarSeleccion" onClick={handleQuitarSeleccionItem}>Quitar Seleccion</button>
+                <EsquemaSelect
+                  esquemas={esquemas}
+                  esquemaSeleccionado={esquemaSeleccionado}
+                  onChange={handleEsquemaChange}
+                />
+                <ObjetoSelect
+                  objetos={objetos}
+                  objetoSeleccionado={objetoSeleccionado}
+                  onChange={handleObjetoChange}
+                />
+                <Button className="btnAgregar" onClick={handleGuardar}>Agregar</Button>
+                <Button className="btnQuitarSeleccion" onClick={handleQuitarSeleccionItem}>Quitar Seleccion</Button>
                 <div className="info-grid2">
                   {atributos.map((atributo) => {
                     const opciones = obtenerOpcionesParaSelect(dispositivoSeleccionado, valoresAtributos, atributo.tipoObjetoAtributoID);
                     return (
-                      <div className="info-item" key={atributo.tipoObjetoAtributoID}>
-                        <strong>{atributo.tipoObjetoAtributoID}, {atributo.tipoObjetoAtributo}</strong>
-                        <select
-                          className="Info-dispositivos"
-                          value={valoresAtributos[atributo.tipoObjetoAtributoID] || ""}
-                          onChange={(e) => handleChange(atributo.tipoObjetoAtributoID, e.target.value)}
-                        >
-                          <option value="">-- Seleccionar --</option>
-                          {opciones.map((opcion, index) => {
-                            const optionValue = opcion.value?.toString() ?? "";
-                            return (
-                              <option key={`${index}-${optionValue}`} value={optionValue}>
-                                {opcion.label}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
+                      <AtributoSelect
+                        key={atributo.tipoObjetoAtributoID}
+                        atributo={atributo}
+                        opciones={opciones}
+                        valorSeleccionado={valoresAtributos[atributo.tipoObjetoAtributoID] || ""}
+                        onChange={handleChange}
+                      />
                     );
                   })}
                 </div>
@@ -213,9 +185,9 @@ const Contenido = () => {
                   </div>
                 </div>
               ))}
-              <button className="btn-cerrar" onClick={cerrarModal}>
+              <Button className="btn-cerrar" onClick={cerrarModal}>
                 Cerrar
-              </button>
+              </Button>
             </div>
           </div>
         )}

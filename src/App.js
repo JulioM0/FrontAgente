@@ -1,6 +1,6 @@
 import './Estilos/App.css';
-import Navbar from './Utilidades/navbar';
-import Contenido from './Utilidades/content'
+import Navbar from './templates/navbar';
+import Contenido from './pages/content'
 
 function App() {
   return (
