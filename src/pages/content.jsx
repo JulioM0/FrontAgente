@@ -5,11 +5,11 @@ import {obtenerLocalizaciones} from "../services/localizacionService.js";
 import {obtenerDispositivos, contarDispositivos} from "../services/dispositivoService.js";
 import { guardar} from "../services/Guardar.js";
 import { transformarDatosDinamicamente, obtenerOpcionesParaSelect } from "../others/extras/transformarDatos.js";
-import {Button} from "../atoms/button.js"
-import {EsquemaSelect, ObjetoSelect, AtributoSelect} from "../atoms/selects.js"
+import {Button} from "../atoms/button.js";
+import {EsquemaSelect, ObjetoSelect, AtributoSelect} from "../atoms/selects.js";
 import { LocalizacionItem } from "../molecules/localizaciones.js";
 import { DispositivoItem } from "../molecules/dispositivos.js";
-import "../others/Estilos/content.css"
+import "../others/Estilos/content.css";
 
 const Contenido = () => {
   const [localizaciones, setLocalizaciones] = useState([]);
@@ -23,6 +23,8 @@ const Contenido = () => {
   const [objetoSeleccionado, setObjetoSeleccionado] = useState(null);
   const [atributos, setAtributos] = useState([]);
   const [valoresAtributos, setValoresAtributos] = useState({});
+  const [busqueda, setBusqueda] = useState('');
+  const [resultadosBusqueda, setResultadosBusqueda] = useState(dispositivos);
 
   useEffect(() => {
     obtenerEsquemas(setEsquemas);
@@ -30,7 +32,7 @@ const Contenido = () => {
   },[]);
 
   useEffect(() => {
-    obtenerDispositivos(setDispositivos, localizacionSeleccionada)
+    obtenerDispositivos(setDispositivos, localizacionSeleccionada, setResultadosBusqueda)
   }, [localizacionSeleccionada], );
 
   useEffect(() => {
@@ -44,6 +46,19 @@ const Contenido = () => {
     setDispositivos([]);
     setDispositivoSeleccionado(null);
   };
+
+  const handleBusqueda = (e) => {
+    const text = e.target.value;
+    setBusqueda(text)
+    if(text.trim === ""){
+      setResultadosBusqueda(dispositivos)
+    }else {
+      const resultados = dispositivos.filter((dispositivo) => 
+        dispositivo.systemName?.toLowerCase().includes(text.toLowerCase())
+      );
+      setResultadosBusqueda(resultados)
+    }
+  }
 
   const handleEsquemaChange = async (e) => {
     const id = e.target.value;
@@ -64,9 +79,17 @@ const Contenido = () => {
       return actualizado;
     });
   };
-  
+
   const handleGuardar = async () => {
-    guardar(valoresAtributos);
+    const validarDatos = atributos.some((atributo) => {
+      const valor = valoresAtributos[atributo.tipoObjetoAtributoID]
+      return !valor || valor === "-Seleccionar-"
+    })
+    if (validarDatos){
+      alert("Hay datos que faltan por agregar")
+    }else {
+      guardar(valoresAtributos);
+    }
   };
 
   const handleSeleccionDispositivo = (dispositivo) => {
@@ -126,10 +149,11 @@ const Contenido = () => {
         {dispositivos.length > 0 && (
           <div className="dispositivos">
             <h1 className="titulo-dispositivos">Dispositivos</h1>
+            <input className="Busqueda" type="text" placeholder="Busca un dispositivo" onChange={handleBusqueda} value={busqueda}/>
             <div className="lista-dispositivos">
-              {dispositivos.map((dispositivo) => (
+              {resultadosBusqueda.map((dispositivo) => (
               <DispositivoItem
-              key={dispositivo.systemName}
+              key={dispositivo.id}
               dispositivo={dispositivo}
               seleccionado={dispositivoSeleccionado === dispositivo.systemName}
               onSeleccionar={handleSeleccionDispositivo}

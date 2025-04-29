@@ -1,14 +1,15 @@
 import api from "../api";
 
-export const obtenerDispositivos = async (setDispositivos, localizacionSeleccionada) => {
+export const obtenerDispositivos = async (setDispositivos, localizacionSeleccionada, setResultadosBusqueda) => {
       if (!localizacionSeleccionada) return;
       try {
         const response = await api.get(`devices?id=${localizacionSeleccionada}`);
         setDispositivos(response.data);
+        setResultadosBusqueda(response.data);
       } catch (error) {
         console.error("Error al obtener los dispositivos:", error);
       }
-    };
+};
 
 export const contarDispositivos = async (setDispositivosPorLocalizacion, localizaciones) => {
   try{
@@ -23,11 +24,9 @@ export const contarDispositivos = async (setDispositivosPorLocalizacion, localiz
       acc[id] = total;
       return acc;
     }, {})
-
     setDispositivosPorLocalizacion(conteo);
   }
   catch (error){
     console.error("Error al obtener los dispositivos", error);
   }
 };
-
