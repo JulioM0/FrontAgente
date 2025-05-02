@@ -49,17 +49,23 @@ const Contenido = () => {
 
   const handleBusqueda = (e) => {
     const text = e.target.value;
-    setBusqueda(text)
-    if(text.trim === ""){
-      setResultadosBusqueda(dispositivos)
-    }else {
-      const resultados = dispositivos.filter((dispositivo) => 
-        dispositivo.systemName?.toLowerCase().includes(text.toLowerCase())
-      );
-      setResultadosBusqueda(resultados)
+    setBusqueda(text);
+  
+    if (text.trim() === "") {
+      setResultadosBusqueda(dispositivos);
+    } else {
+      const resultados = dispositivos.filter((dispositivo) => {
+        const nombre = dispositivo.systemName?.toLowerCase() || "";
+        const ip = dispositivo.ipAddresses?.toString().toLowerCase() || "";
+        const ipPublic = dispositivo.publicIP?.toLowerCase() || "";
+        const termino = text.toLowerCase();
+  
+        return nombre.includes(termino) || ip.includes(termino) || ipPublic.includes(termino);
+      });
+      setResultadosBusqueda(resultados);
     }
-  }
-
+  };
+  
   const handleEsquemaChange = async (e) => {
     const id = e.target.value;
     setEsquemaSeleccionado(id);
@@ -86,7 +92,7 @@ const Contenido = () => {
       return !valor || valor === "-Seleccionar-"
     })
     if (validarDatos){
-      alert("Hay datos que faltan por agregar")
+      alert("Faltan datos por seleccionar")
     }else {
       guardar(valoresAtributos);
     }
@@ -149,7 +155,7 @@ const Contenido = () => {
         {dispositivos.length > 0 && (
           <div className="dispositivos">
             <h1 className="titulo-dispositivos">Dispositivos</h1>
-            <input className="Busqueda" type="text" placeholder="Busca un dispositivo" onChange={handleBusqueda} value={busqueda}/>
+            <input className="Busqueda" type="text" placeholder="Ingresa el nombre o la IP de un dispositivo" onChange={handleBusqueda} value={busqueda}/>
             <div className="lista-dispositivos">
               {resultadosBusqueda.map((dispositivo) => (
               <DispositivoItem
