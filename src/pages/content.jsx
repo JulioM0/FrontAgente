@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { isValidElement, useEffect, useState } from "react";
 import {obtenerEsquemas} from "../services/esquemaService.js"
 import {esquemaChange, objetoChange} from "../services/atributosService.js";
 import {obtenerLocalizaciones} from "../services/localizacionService.js";
@@ -18,9 +18,9 @@ const Contenido = () => {
   const [dispositivoSeleccionado, setDispositivoSeleccionado] = useState(null);
   const [dispositivosPorLocalizacion, setDispositivosPorLocalizacion] = useState({});
   const [esquemas, setEsquemas] = useState([]);
-  const [esquemaSeleccionado, setEsquemaSeleccionado] = useState(null);
+  const [esquemaSeleccionado, setEsquemaSeleccionado] = useState(false);
   const [objetos, setObjetos] = useState([]);
-  const [objetoSeleccionado, setObjetoSeleccionado] = useState(null);
+  const [objetoSeleccionado, setObjetoSeleccionado] = useState(false);
   const [atributos, setAtributos] = useState([]);
   const [valoresAtributos, setValoresAtributos] = useState({});
   const [busqueda, setBusqueda] = useState('');
@@ -59,7 +59,6 @@ const Contenido = () => {
         const ip = dispositivo.ipAddresses?.toString().toLowerCase() || "";
         const ipPublic = dispositivo.publicIP?.toLowerCase() || "";
         const termino = text.toLowerCase();
-  
         return nombre.includes(termino) || ip.includes(termino) || ipPublic.includes(termino);
       });
       setResultadosBusqueda(resultados);
@@ -87,6 +86,10 @@ const Contenido = () => {
   };
 
   const handleGuardar = async () => {
+    if(objetoSeleccionado === false){
+      alert("Debes seleccionar un objeto y su informacion")
+    }
+    else{
     const validarDatos = atributos.some((atributo) => {
       const valor = valoresAtributos[atributo.tipoObjetoAtributoID]
       return !valor || valor === "-Seleccionar-"
@@ -96,6 +99,7 @@ const Contenido = () => {
     }else {
       guardar(valoresAtributos);
     }
+  }
   };
 
   const handleSeleccionDispositivo = (dispositivo) => {
@@ -103,8 +107,8 @@ const Contenido = () => {
   };
 
   const handleQuitarSeleccionItem = () => {
-    setEsquemaSeleccionado("")
-    setObjetoSeleccionado("")
+    setEsquemaSeleccionado(false)
+    setObjetoSeleccionado(false)
     setAtributos([])
   }
 
@@ -112,6 +116,7 @@ const Contenido = () => {
     setDispositivoSeleccionado(null);
     setEsquemaSeleccionado(null)
     setObjetoSeleccionado(null)
+    
     setAtributos([])
   };
 

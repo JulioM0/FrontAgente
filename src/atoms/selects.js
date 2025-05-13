@@ -12,17 +12,18 @@ import React from 'react';
     </select>
   );
 };
-
-export const ObjetoSelect = ({ objetos, objetoSeleccionado, onChange }) => {
-    return (
-      <select disabled={objetos.length === 0} onChange={onChange} value={objetoSeleccionado} className="Objetos">
-        <option value="">-- Seleccionar --</option>
+ 
+export const ObjetoSelect = ({ objetos, objetoSeleccionado, onChange, esquemaSeleccionado }) => {
+  return (
+      <select disabled={esquemaSeleccionado === false || objetos.length === 0} onChange={onChange} value={objetoSeleccionado} className="Objetos">
+        <option value="">Selecciona un Objeto</option>
             {objetos.length > 0 &&
                 objetos.map((objeto) => (
                 <option key={objeto.tipoObjetoID} value={objeto.tipoObjetoID}>
                     {objeto.tipoObjeto}
                 </option>
-          ))}
+          )
+          )}
       </select>
     );
   };

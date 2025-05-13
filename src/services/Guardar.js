@@ -12,5 +12,5 @@ export const guardar = async (valoresAtributos) => {
       console.error(`Error guardando atributo ${ObjetoAtributoID}`, error);
     }
   }
-  alert("Todos los valores fueron guardados");
+    alert("Todos los valores fueron guardados");
 }
